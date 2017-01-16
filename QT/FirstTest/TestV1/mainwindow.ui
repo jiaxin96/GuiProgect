@@ -17,14 +17,14 @@
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>150</x>
-      <y>100</y>
+      <x>160</x>
+      <y>80</y>
       <width>84</width>
       <height>28</height>
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>Ok</string>
     </property>
    </widget>
   </widget>
@@ -59,11 +59,11 @@
    <hints>
     <hint type="sourcelabel">
      <x>199</x>
-     <y>159</y>
+     <y>143</y>
     </hint>
     <hint type="destinationlabel">
-     <x>264</x>
-     <y>212</y>
+     <x>208</x>
+     <y>211</y>
     </hint>
    </hints>
   </connection>
