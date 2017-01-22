@@ -1,6 +1,6 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-01-16T16:41:49
+# Project created by QtCreator 2017-01-21T21:18:12
 #
 #-------------------------------------------------
 
@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = HitMouse
+TARGET = Snake
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
