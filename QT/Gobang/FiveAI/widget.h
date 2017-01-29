@@ -14,6 +14,7 @@
 #include <QList>
 #include <QPoint>
 #include <QMessageBox>
+
 namespace Ui {
 class Widget;
 }
@@ -73,11 +74,37 @@ private:
     // AI 部分
     // #####
     // #####
+
+    // 从1开始计数
+    // 实际赢法数组从0开始计数
+
+    // 通过statisticWinWays计算得到
+    int winsWayCount;
+
     QPoint AInext;
+    QPoint AI_max;
+    QPoint player_max;
+
     QPoint currentPoint;
 
     // AI核心
     void getAI_next();
+    void statisticwinWays();
+    void getScore();
+    void initScore();
+    void getMaxScore();
+    // 统计数组
+    int playerWinsWayStatisticArr[600];
+    int computerWinsWayStatisticArr[600];
+
+    // 评分数组
+    int playerScore[15][15];
+    int computerScore[15][15];
+    // 赢法数组
+    bool winsArr[15][15][600];
+    // 思考深度
+    int thinkDeep;
+
 
 
     // QWidget interface

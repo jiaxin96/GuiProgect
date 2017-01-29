@@ -44,8 +44,10 @@ Widget::Widget(QWidget *parent) :
     backOne->setGeometry(QRect(492,280, 100, 50));
 
 
-    init();
+    // AI part
+    statisticwinWays();
 
+    init();
 
     QObject::connect(backOne, SIGNAL(clicked()) , this, SLOT(backOneButClicked()) );
     QObject::connect(startFirstBut, SIGNAL(clicked()), this, SLOT(startFirstButClicked()) );
@@ -89,6 +91,8 @@ void Widget::startLaterButClicked()
         countChess++;
         playMap[7][7] = 1;
         turns = 2;
+        currentPoint.setX(7);
+        currentPoint.setY(7);
         this->whichOneTurn->setText("White");
 
         this->update();
@@ -145,16 +149,7 @@ void Widget::exitButClicked()
     exit(0);
 }
 
-void Widget::getAI_next()
-{
-// 先堵
 
-
-
-//想办法赢
-
-
-}
 
 bool Widget::checkWin()
 {
@@ -254,11 +249,11 @@ void Widget::winShow()
 
 void Widget::init()
 {
-    for (int i = 0; i < 15; ++i) {
-        for (int j = 0; j < 15; ++j) {
-            playMap[i][j] = 0;
-        }
-    }
+//    for (int i = 0; i < 15; ++i) {
+//        for (int j = 0; j < 15; ++j) {
+//            playMap[i][j] = 0;
+//        }
+//    }
     gameStart = false;
     canStart = true;
     whichOneTurn->setText("Black");
@@ -269,6 +264,20 @@ void Widget::init()
     // 2  表示白色落子
     turns = 1;
 
+
+    // AI part
+    for (int i = 0; i < 15; ++i) {
+        for (int j = 0; j < 15; ++j) {
+            playMap[i][j] = 0;
+            playerScore[15][15] = 0;
+            computerScore[15][15] = 0;
+        }
+    }
+
+    for (int k = 0; k < winsWayCount; ++k) {
+        playerWinsWayStatisticArr[k] = 0;
+        computerWinsWayStatisticArr[k] = 0;
+    }
     this->update();
 //    playMap[7][7] = 2;
 //    playMap[7][8] = 1;
@@ -280,33 +289,54 @@ void Widget::init()
 void Widget::mousePressEvent(QMouseEvent *event)
 {
     if (gameStart) {
-        int currX = event->x();
-        int currY = event->y();
-        qDebug() << currX << " " << currY << endl;
+        if (( firstPlay && turns == 1 ) || (!firstPlay && turns == 2)) {
+            int currX = event->x();
+            int currY = event->y();
+            qDebug() << currX << " " << currY << endl;
 
-        if (currX < 45 || currX > 447 || currY < 45 || currY > 447) {
-            qDebug() << "Not int the active area\n";
-        } else {
-            int tCol = abs(currX - 50 + 10) / 28;
-            int tRow = abs(currY - 50 + 10) / 28;
-            if (playMap[tRow][tCol] == 0) {
-                playMap[tRow][tCol] = turns;
-                countChess++;
-                currentPoint.setX(tRow);
-                currentPoint.setY(tCol);
-                changeTurn();
-                chessLise.push_back( currentPoint );
-
-                this->update();
-
-                if (checkWin()) {
-                    winShow();
-                } else if (countChess == 15*15) {
-                    tie();
-                }
-
+            if (currX < 45 || currX > 447 || currY < 45 || currY > 447) {
+                qDebug() << "Not int the active area\n";
             } else {
-                qDebug() << "there has had a Chess\n";
+                int tCol = abs(currX - 50 + 10) / 28;
+                int tRow = abs(currY - 50 + 10) / 28;
+                if (playMap[tRow][tCol] == 0) {
+                    playMap[tRow][tCol] = turns;
+                    countChess++;
+                    currentPoint.setX(tRow);
+                    currentPoint.setY(tCol);
+                    changeTurn();
+                    chessLise.push_back( currentPoint );
+
+
+                    this->update();
+
+
+                    for (int i = 0; i < winsWayCount; ++i) {
+                        // 靠近胜利+1
+                        if (winsArr[tRow][tCol][i]) playerWinsWayStatisticArr[i]++;
+                        // i方法下电脑无法赢
+                        computerWinsWayStatisticArr[i] = 10;
+                        if (playerWinsWayStatisticArr[i] == 5) {
+                            winShow();
+                            break;
+                        }
+                    }
+
+                    if (gameStart && countChess == 15 * 15) {
+                        tie();
+                    }
+
+                    if (gameStart) getAI_next();
+
+//                    if (checkWin()) {
+//                        winShow();
+//                    } else if (countChess == 15*15) {
+//                        tie();
+//                    }
+
+                } else {
+                    qDebug() << "there has had a Chess\n";
+                }
             }
         }
     }
@@ -367,4 +397,15 @@ void Widget::paintEvent(QPaintEvent *event)
         }
     }
 
+    // 标志当前点
+    QBrush t;
+    pen.setColor(Qt::red);
+    painter->setPen(pen);
+    painter->setBrush(t);
+
+
+    if (gameStart)
+    {
+        painter->drawRect(50 + currentPoint.y() * 28 - 12.5, 50 + currentPoint.x() * 28 - 12.5, 25, 25);
+    }
 }

@@ -49,9 +49,11 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../FiveAI/main.cpp \
-		../FiveAI/widget.cpp moc_widget.cpp
+		../FiveAI/widget.cpp \
+		../FiveAI/widgetai.cpp moc_widget.cpp
 OBJECTS       = main.o \
 		widget.o \
+		widgetai.o \
 		moc_widget.o
 DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/common/unix.conf \
@@ -155,6 +157,7 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/qt_config.prf \
 		/usr/lib/qt/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/qt/mkspecs/features/spec_post.prf \
+		../FiveAI/.qmake.stash \
 		/usr/lib/qt/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/qt/mkspecs/features/toolchain.prf \
 		/usr/lib/qt/mkspecs/features/default_pre.prf \
@@ -174,7 +177,8 @@ DIST          = /usr/lib/qt/mkspecs/features/spec_pre.prf \
 		/usr/lib/qt/mkspecs/features/yacc.prf \
 		/usr/lib/qt/mkspecs/features/lex.prf \
 		../FiveAI/FiveAI.pro ../FiveAI/widget.h ../FiveAI/main.cpp \
-		../FiveAI/widget.cpp
+		../FiveAI/widget.cpp \
+		../FiveAI/widgetai.cpp
 QMAKE_TARGET  = FiveAI
 DESTDIR       = 
 TARGET        = FiveAI
@@ -288,6 +292,7 @@ Makefile: ../FiveAI/FiveAI.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib
 		/usr/lib/qt/mkspecs/features/qt_config.prf \
 		/usr/lib/qt/mkspecs/linux-g++/qmake.conf \
 		/usr/lib/qt/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/usr/lib/qt/mkspecs/features/exclusive_builds.prf \
 		/usr/lib/qt/mkspecs/features/toolchain.prf \
 		/usr/lib/qt/mkspecs/features/default_pre.prf \
@@ -413,6 +418,7 @@ Makefile: ../FiveAI/FiveAI.pro /usr/lib/qt/mkspecs/linux-g++/qmake.conf /usr/lib
 /usr/lib/qt/mkspecs/features/qt_config.prf:
 /usr/lib/qt/mkspecs/linux-g++/qmake.conf:
 /usr/lib/qt/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /usr/lib/qt/mkspecs/features/exclusive_builds.prf:
 /usr/lib/qt/mkspecs/features/toolchain.prf:
 /usr/lib/qt/mkspecs/features/default_pre.prf:
@@ -450,7 +456,7 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../FiveAI/widget.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../FiveAI/main.cpp ../FiveAI/widget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../FiveAI/main.cpp ../FiveAI/widget.cpp ../FiveAI/widgetai.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../FiveAI/widget.ui $(DISTDIR)/
 
 
@@ -509,6 +515,9 @@ main.o: ../FiveAI/main.cpp ../FiveAI/widget.h
 widget.o: ../FiveAI/widget.cpp ../FiveAI/widget.h \
 		ui_widget.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o widget.o ../FiveAI/widget.cpp
+
+widgetai.o: ../FiveAI/widgetai.cpp ../FiveAI/widget.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o widgetai.o ../FiveAI/widgetai.cpp
 
 moc_widget.o: moc_widget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_widget.o moc_widget.cpp
