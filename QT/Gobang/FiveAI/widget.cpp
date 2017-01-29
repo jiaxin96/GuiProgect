@@ -46,6 +46,7 @@ Widget::Widget(QWidget *parent) :
 
     // AI part
     statisticwinWays();
+    qDebug() << "AI has been ready!\n";
 
     init();
 
@@ -72,6 +73,8 @@ Widget::~Widget()
 
 void Widget::startFirstButClicked() {
     if (canStart) {
+        turns = 2;
+        changeTurn();
         firstPlay = true;
         canStart = false;
         gameStart = true;
@@ -89,11 +92,11 @@ void Widget::startLaterButClicked()
         canStart = false;
         // 后手
         countChess++;
-        playMap[7][7] = 1;
-        turns = 2;
+        turns = 1;
+        playMap[7][7] = turns;
         currentPoint.setX(7);
         currentPoint.setY(7);
-        this->whichOneTurn->setText("White");
+        changeTurn();
 
         this->update();
     }
@@ -121,9 +124,20 @@ void Widget::backOneButClicked() {
             playMap[t.x()][t.y()] = 0;
             chessLise.pop_back();
 
+            for (int i = 0; i < winsWayCount; ++i) {
+                if (winsArr[t.x()][t.y()][i]) {
+                    computerWinsWayStatisticArr[i]--;
+                }
+            }
+
             t = chessLise.back();
             playMap[t.x()][t.y()] = 0;
             chessLise.pop_back();
+            for (int i = 0; i < winsWayCount; ++i) {
+                if (winsArr[t.x()][t.y()][i]) {
+                    playerWinsWayStatisticArr[i]--;
+                }
+            }
         }
         else if (!firstPlay && turns == 2) {
             if (countChess < 3) return;
@@ -131,10 +145,19 @@ void Widget::backOneButClicked() {
             QPoint t = chessLise.back();
             playMap[t.x()][t.y()] = 0;
             chessLise.pop_back();
-
+            for (int i = 0; i < winsWayCount; ++i) {
+                if (winsArr[t.x()][t.y()][i]) {
+                    computerWinsWayStatisticArr[i]--;
+                }
+            }
             t = chessLise.back();
             playMap[t.x()][t.y()] = 0;
             chessLise.pop_back();
+            for (int i = 0; i < winsWayCount; ++i) {
+                if (winsArr[t.x()][t.y()][i]) {
+                    playerWinsWayStatisticArr[i]--;
+                }
+            }
         }
         this->update();
     }
@@ -312,13 +335,15 @@ void Widget::mousePressEvent(QMouseEvent *event)
 
 
                     for (int i = 0; i < winsWayCount; ++i) {
-                        // 靠近胜利+1
-                        if (winsArr[tRow][tCol][i]) playerWinsWayStatisticArr[i]++;
-                        // i方法下电脑无法赢
-                        computerWinsWayStatisticArr[i] = 10;
-                        if (playerWinsWayStatisticArr[i] == 5) {
-                            winShow();
-                            break;
+                            // 靠近胜利+1
+                            if (winsArr[tRow][tCol][i]) {
+                            playerWinsWayStatisticArr[i]++;
+                            // i方法下电脑无法赢
+                            computerWinsWayStatisticArr[i] = 10;
+                            if (playerWinsWayStatisticArr[i] == 5) {
+                                winShow();
+                                break;
+                            }
                         }
                     }
 

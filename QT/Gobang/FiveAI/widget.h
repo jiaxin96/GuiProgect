@@ -14,7 +14,9 @@
 #include <QList>
 #include <QPoint>
 #include <QMessageBox>
-
+#include <stdlib.h>
+#include <unistd.h>
+#include <QVector>
 namespace Ui {
 class Widget;
 }
@@ -93,6 +95,8 @@ private:
     void getScore();
     void initScore();
     void getMaxScore();
+
+
     // 统计数组
     int playerWinsWayStatisticArr[600];
     int computerWinsWayStatisticArr[600];
@@ -102,10 +106,16 @@ private:
     int computerScore[15][15];
     // 赢法数组
     bool winsArr[15][15][600];
-    // 思考深度
-    int thinkDeep;
+    //  加强思考
+    bool live3(int r, int c, QString who);
+    bool __live3__(int r, int c, int t);
 
-
+    int thinkDeep = 2;
+    void deepThinkGetScore(int i);
+    void deepThinkGetMaxScore(int i);
+    void twoDeepThink();
+    QVector< QPoint > deep_think_player_max;
+    QVector< QPoint > deep_think_computer_max;
 
     // QWidget interface
 protected:
